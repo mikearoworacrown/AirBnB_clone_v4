@@ -67,8 +67,15 @@ class FileStorage:
             json.dump(json_objects, f)
 
     def reload(self):
-        """Deserialize the JSON file __file_path to __objects, if it exists."""
-        fileName = FileStorage.__file_path
+        """Deserialize the JSON file __file_path to __objects, if it exists."""        
+        try:
+            with open(self.__file_path, 'r') as f:
+                jo = json.load(f)
+            for key in jo:
+                self.__objects[key] = classes[jo[key]["__class__"]](**jo[key])
+        except:
+            pass
+        """fileName = FileStorage.__file_path
         FileStorage.__objects = {}
         try:
             with open(fileName, mode='r', encoding='utf-8') as f:
@@ -77,7 +84,7 @@ class FileStorage:
                     clsname = objdict["__class__"]
                     FileStorage.__objects[obj_id] = classes[clsname](**objdict)
         except:
-            return
+            return"""
 
     def delete(self, obj=None):
         """Delete a given object from __objects, if it exists."""
